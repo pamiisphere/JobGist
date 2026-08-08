@@ -16,9 +16,6 @@ This repository contains both the **application** (worker-facing and employer-fa
 - [Feature Set](#feature-set)
 - [System Architecture](#system-architecture)
 - [Tech Stack](#tech-stack)
-- [MVP Scope](#mvp-scope)
-- [Project Status & Roadmap](#project-status--roadmap)
-- [Getting Started](#getting-started)
 - [References](#references)
 
 ---
