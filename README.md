@@ -4,7 +4,6 @@
 
 JobGist is a two-sided job-matching platform serving a segment of the Thai labor market that existing job sites ignore: basic-skill workers (factory, warehouse, service roles) who cannot write a resume, and small Thai businesses with no HR function. Instead of requiring a resume, workers complete a guided Thai form and an LLM generates a job-ready profile on their behalf. Employers post jobs in plain Thai and receive AI-generated applicant summaries with fit scores.
 
-This repository contains both the **application** (worker-facing and employer-facing product) and the **research pipeline** (cost-optimized Thai LLM routing and evaluation), which together form an academic contribution as well as a working MVP.
 
 ---
 
@@ -14,8 +13,6 @@ This repository contains both the **application** (worker-facing and employer-fa
 - [Core Concept](#core-concept)
 - [Research Contribution](#research-contribution)
 - [Feature Set](#feature-set)
-- [System Architecture](#system-architecture)
-- [Tech Stack](#tech-stack)
 - [References](#references)
 
 ---
