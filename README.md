@@ -76,5 +76,3 @@ The model routing and evaluation pipeline is a core scholarly contribution, not 
 11. K. Pipatanakul et al., "Typhoon 2: A Family of Open Text and Multimodal Thai Large Language Models," arXiv:2412.13702, 2024.
 
 ---
-
-*JobGist combines a product build with an academic research contribution on cost-efficient Thai-language LLM usage. Contributions and issues should keep both goals in mind: shippable MVP features, and a clean, extensible research pipeline.*
