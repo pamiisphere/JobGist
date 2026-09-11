@@ -1,75 +1,43 @@
-# JobGist
+# JobGist: A Thai-Language Job-Matching Platform for Elderly and Patient Caregivers
 
-**A Thai-language job platform for workers without resumes, powered by cost-efficient Thai LLM profile generation and summarization.**
+*Powered by Cost-Efficient Thai LLM Profile Generation and Summarization*
 
-JobGist is a two-sided job-matching platform serving a segment of the Thai labor market that existing job sites ignore: basic-skill workers (factory, warehouse, service roles) who cannot write a resume, and small Thai businesses with no HR function. Instead of requiring a resume, workers complete a guided Thai form and an LLM generates a job-ready profile on their behalf. Employers post jobs in plain Thai and receive AI-generated applicant summaries with fit scores.
+## 1. Concept Overview
 
+JobGist is a two-sided job-matching platform focused on a single, underserved segment of the Thai care economy: elderly and patient caregivers. On the worker side, the target users are caregivers, nurse aides (NA), practical nurses (PN), and informal home caregivers, who operate entirely in Thai and hold no formal resume or application document, even though many have real experience and training certificates. On the employer side, the target users are individual families and households who need to hire a caregiver directly, without going through a dispatch agency. Workers never upload a resume. Instead, they complete a simple guided Thai form covering care experience, certifications, and the conditions they are comfortable caring for (e.g., bedridden patients, feeding tubes, dementia), and the system uses a Thai large language model (LLM) to generate a job-ready profile automatically. Families post their care needs in plain Thai, describing the patient's condition and required support, and receive a concise Thai summary of each applicant with a readable explanation of fit.
 
----
+## 2. Problem Statement
 
-## Table of Contents
+- **The articulation gap.** Many caregivers know exactly what kind of care they can provide but cannot express it in a formal document. HCI research documents this gap directly: job seekers report "I know I can do the job, it's just putting it down" [1]. Formal hiring channels assume a resume or self-written profile as the entry ticket, excluding this group at the very first step, even though caregiving is precisely the kind of role where trust depends on being able to see a caregiver's specific experience clearly stated.
+- **No direct channel between families and caregivers.** Families who want to hire a caregiver on their own terms currently have two options: word-of-mouth referrals, or a dispatch agency (e.g., VNurseCare) that screens and assigns a caregiver on the family's behalf. Agencies add trust and vetting, but they also add a markup, limit the family's ability to compare and choose between candidates directly, and give the caregiver little control over which family they work for. There is no marketplace-style channel in Thai where caregivers can present themselves and families can choose directly.
+- **Thai is expensive for LLMs.** Thai text consumes several times more tokens than English under mainstream tokenizers, reported at up to 9 times more under ChatGPT's tokenizer [2] and 3.8 times more than a Thai-trained tokenizer [3], with measurably higher cost and lower accuracy across multilingual benchmarks [4]. A platform that generates and summarizes Thai profiles at a price affordable to ordinary families, not just SMEs or agencies with budgets, must treat cost as a first-class design constraint. This is the research core of the project.
 
-- [Motivation](#motivation)
-- [Core Concept](#core-concept)
-- [Research Contribution](#research-contribution)
-- [Feature Set](#feature-set)
-- [References](#references)
+## 3. Literature Review and Existing Solutions
 
----
+**Thai caregiver hiring today.** Existing services for finding elderly and patient care in Thailand, such as VNurseCare, HomeNurse-style home-visit services, and similar dispatch operators, follow an agency-assignment model: the family requests a care type or condition, and the company selects and sends a vetted caregiver from its own roster [5]. This model provides screening and liability protection, but it is not a marketplace, families do not browse caregiver profiles or choose between candidates themselves, and caregivers do not control their own presentation or client selection. General Thai job platforms (JobThai, jobsDB Thailand, JOBBKK, JobTH) follow a resume-first model unsuited to this population, requiring an applicant to create a profile before applying at all [5].
 
-## Motivation
+**International platforms and research.** Commercially, Care.com (US) operates a genuine two-sided marketplace for caregivers and families, where caregivers build profiles and families search and message directly, but it depends on caregivers writing their own English-language profile and offers no automated profile generation for those who cannot [6]. Veroskills (US) generates resumes for blue-collar candidates who lack one [7], and CloudApper runs chatbot-based hiring over SMS for workers who find online forms and resume submission a barrier [8]. Academically, Microsoft Research India spent over a decade designing job boards and digital tools for low-literate users in developing regions [9], and recent CHI work studies how underserved job seekers struggle to articulate their strengths in application documents [1]. In recruitment NLP, LLM pipelines that summarize, grade, and rank resumes are now well established [10], but this literature is English-only and does not report per-candidate cost. On the Thai side, Typhoon 2 provides an open family of Thai-optimized models with substantially better Thai token efficiency than general-purpose commercial models [11], and the first author's ongoing research internship at JAIST on LLM-based Thai text summarization supplies preliminary results and a validated evaluation methodology (ROUGE, BERTScore, and inter-rater agreement statistics) that transfer directly to this project.
 
-- **The articulation gap.** Many workers know what they can do but cannot express it in a formal document. Every mainstream job platform assumes a resume or self-written profile as the entry ticket, excluding this group at the first step.
-- **No channel for small Thai employers.** Most Thai SMEs have no HR department. Hiring for operational roles still relies on word of mouth or posted signs.
-- **Thai is expensive for LLMs.** Thai text consumes several times more tokens than English under mainstream tokenizers. A platform generating and summarizing Thai profiles at prices affordable to SMEs must treat cost as a first-class design constraint — this is the research core of the project.
+## 4. Research Gap
 
-## Core Concept
+Each ingredient exists in isolation; the combination does not. Thai caregiver hiring is dominated by agency-assignment models that offer no direct, caregiver-controlled marketplace. International caregiver marketplaces exist (Care.com) but assume the caregiver can write their own profile, and offer no LLM-based generation for those who cannot, let alone in Thai. LLM recruitment research is English-only and cost-blind, while the Thai NLP literature has never been applied to caregiver profile generation or family-side applicant summarization. No published system combines (1) Thai caregivers who have no resume and operate only in Thai, (2) LLM-based profile generation and summarization in Thai under an explicit cost constraint, and (3) individual families hiring directly rather than through an agency. JobGist is positioned precisely at this intersection, and its evaluation will provide the first systematic evidence on Thai LLM profile generation for this population.
 
-- **Workers** never write a resume. They complete a simple guided Thai form (with voice input support) covering work experience, skills, and certificates (attached as photo evidence). An LLM generates a job-ready Thai profile automatically, which the worker verifies before publishing.
-- **Employers** post jobs in plain Thai. For each applicant, they receive an AI-generated Thai summary with a fit score and a plain-language rationale — no HR expertise required.
+## 5. Proposed System and Expected Contributions
 
-## Research Contribution
-
-The model routing and evaluation pipeline is a core scholarly contribution, not just a technical detail:
-
-- **Model routing:** dynamically route between **Typhoon 2** (Thai-optimized, token-efficient) and **GPT-4o-mini** (general-purpose commercial) based on task complexity.
-- **Evaluation pipeline:** track **ROUGE** and **BERTScore** to measure quality trade-offs between routing choices.
-- **User-correction feedback loop:** capture worker/employer corrections to generated text as a signal for improving routing and prompting over time.
-- **Contribution:** the first systematic, cost-aware comparison of a Thai-optimized open model against a general-purpose commercial model on Thai profile generation and summarization, reporting quality, token efficiency, and latency.
-
-> **Design principle:** the cost-optimization and evaluation modules should be architected into the codebase from the start, even if not fully implemented in the MVP — retrofitting them later would be costly, and they represent the project's primary research contribution.
-
-## Feature Set
-
-### Worker-side
-- Guided multi-step form with voice input
-- Photo/OCR-based document and certificate upload
-- AI-generated profile preview with human verification step
-- Map-based job search with icon-driven filters
-
-### Employer-side
-- Natural language job posting
-- AI-generated applicant summaries with fit scores
-- Simplified dashboard designed for owners with no HR background
-
-### Backend / Research Core
-- Model routing layer (Typhoon 2 vs. GPT-4o-mini, chosen by task complexity)
-- Evaluation pipeline tracking ROUGE and BERTScore
-- User-correction feedback loop for continuous improvement
-
+- **Worker (caregiver) side:** a guided Thai form with no free-text writing and no resume required, covering care type, years of experience, and comfort level with specific conditions (e.g., bedridden, feeding tube, dementia); certificate and training-document photos serve as evidence; the system generates a job-ready Thai profile and updates it as experience grows.
+- **Employer (family) side:** plain-Thai posting of the patient's condition and care needs; automatic Thai summaries of each applicant caregiver and a ranked fit score with a plain-language rationale, designed for families with no hiring experience.
+- **Research contribution:** a cost-aware comparison of a Thai-optimized open model (Typhoon 2) against a general-purpose commercial model (GPT-4o-mini) on Thai caregiver profile generation and summarization, reporting quality, token efficiency, and latency, extending the first author's JAIST evaluation methodology to a new task and a new, underserved population.
 
 ## References
 
-1. "'I Know I Can Do the Job, It's Just Putting It Down': Using Personas as a Mirror to Identify Strengths," Proc. ACM CHI, 2026.
-2. J. Mu et al., arXiv:2411.14252, 2024.
-3. Z. Csaki et al., "Efficiently Adapting Pretrained Language Models to New Languages," arXiv:2311.05741, 2023.
-4. A. Petrov et al., "Language Model Tokenizers Introduce Unfairness Between Languages," NeurIPS, 2023; O. Ahia et al., EMNLP, 2023.
-5. Platform survey: JobThai, jobsDB Thailand, JOBBKK, JobTH, JobTopGun (Super Resume), accessed July 2026.
-6. Daywork, AI-assisted gig staffing platform, Thailand.
-7. Veroskills, AI blue-collar staffing platform with resume creation, RecTech Media coverage, Dec. 2025.
-8. CloudApper AI Recruiter, chatbot/SMS-based frontline hiring, 2025.
-9. I. Medhi Thies et al., Microsoft Research India, job boards and digital tools for low-literate users (2006–2018).
-10. C. Gan et al., "Application of LLM Agents in Recruitment," arXiv:2401.08315, 2024.
-11. K. Pipatanakul et al., "Typhoon 2: A Family of Open Text and Multimodal Thai Large Language Models," arXiv:2412.13702, 2024.
-
----
+[1] "'I Know I Can Do the Job, It's Just Putting It Down': Using Personas as a Mirror to Identify Strengths," Proc. ACM CHI, 2026.
+[2] J. Mu et al., arXiv:2411.14252, 2024 (Thai up to 9x more tokens than English under ChatGPT's tokenizer).
+[3] Z. Csaki et al., "Efficiently Adapting Pretrained Language Models to New Languages," arXiv:2311.05741, 2023.
+[4] A. Petrov et al., "Language Model Tokenizers Introduce Unfairness Between Languages," NeurIPS, 2023; O. Ahia et al., EMNLP, 2023.
+[5] Platform survey: VNurseCare, JobThai, jobsDB Thailand, JOBBKK, JobTH, accessed September 2026.
+[6] Care.com, two-sided caregiver marketplace platform, accessed September 2026.
+[7] Veroskills, AI blue-collar staffing platform with resume creation, RecTech Media coverage, Dec. 2025.
+[8] CloudApper AI Recruiter, chatbot/SMS-based frontline hiring, 2025.
+[9] I. Medhi Thies et al., Microsoft Research India, job boards and digital tools for low-literate users (research program, 2006-2018).
+[10] C. Gan et al., "Application of LLM Agents in Recruitment," arXiv:2401.08315, 2024.
+[11] K. Pipatanakul et al., "Typhoon 2: A Family of Open Text and Multimodal Thai Large Language Models," arXiv:2412.13702, 2024.
