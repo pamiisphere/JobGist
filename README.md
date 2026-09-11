@@ -3,7 +3,7 @@
 **A Thai-language job platform for workers without resumes, powered by cost-efficient Thai LLM profile generation and summarization.**
 
 JobGist is a two-sided job-matching platform serving a segment of the Thai labor market that existing job sites ignore: basic-skill workers (factory, warehouse, service roles) who cannot write a resume, and small Thai businesses with no HR function. Instead of requiring a resume, workers complete a guided Thai form and an LLM generates a job-ready profile on their behalf. Employers post jobs in plain Thai and receive AI-generated applicant summaries with fit scores.
-
+https://pamiisphere.github.io/JobGist/
 
 ---
 
